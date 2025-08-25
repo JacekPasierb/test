@@ -6,6 +6,7 @@
   "background_color": "#ffffff",
   "theme_color": "#317EFB",
   "orientation": "portrait",
+
   "icons": [
     {
       "src": "/icons/motorek_icon_192.png",
