@@ -231,8 +231,8 @@ const MotorcycleForm = () => {
                   const url = await uploadToCloudinary(file);
                   setFieldValue("imageUrl", url);
                   setPreview(url);
-                } catch (err: any) {
-                  setFileError(err?.message || "Błąd uploadu");
+                } catch (err: unknown) {
+                  setFileError(err instanceof Error ? err.message : "Błąd uploadu");
                 } finally {
                   setUploading(false);
                 }
