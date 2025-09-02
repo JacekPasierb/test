@@ -3,11 +3,11 @@ import MotorcycleForm from "./components/MotorcycleForm";
 
 const Home = () => {
   return (
-    <main className="p-3 flex h-screen items-stretch">
-      <div className="flex-1 bg-white text-black border border-gray-500 rounded-l-md p-5 my-auto h-full">
+    <main className="p-3 flex flex-col md:flex-row h-auto md:h-screen items-stretch gap-3">
+      <div className="flex-1 bg-white text-black border border-gray-500 rounded-md md:rounded-l-md md:rounded-r-none p-5 my-auto h-full">
         <MotorcycleForm />
       </div>
-      <div className="flex-1 bg-white text-black border border-gray-500 rounded-r-md p-5 my-auto h-full">
+      <div className="flex-1 bg-white text-black border border-gray-500 rounded-md md:rounded-r-md md:rounded-l-none p-5 my-auto h-full">
         <div className="flex justify-between">
           <h2 className="text-3xl font-bold mb-2">Twój Garaż</h2>
           <SignOutButton redirectUrl="/sign-in">

@@ -3,6 +3,14 @@ import withPWA from "next-pwa";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com", // Cloudinary host
+      },
+    ],
+  },
 };
 
 export default withPWA({

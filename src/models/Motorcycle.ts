@@ -3,12 +3,13 @@ import {Schema, model, models} from "mongoose";
 const MotorcycleSchema = new Schema(
   {
     userId: {type: String, required: true, index: true}, // z Clerk
-    brand: {type: String, required: true, trim: true},
+    marka: {type: String, required: true, trim: true},
     model: {type: String, required: true, trim: true},
-    year: {type: Number, min: 1900, max: 2100},
-    nickname: {type: String, trim: true},
-    odometer: {type: Number, min: 0},
-    tankCapacity: {type: Number, min: 0},
+    rok: {type: Number, min: 1900, max: 2100},
+    ksywka: {type: String, trim: true},
+    przebieg: {type: Number, min: 0},
+    pojemnosc: {type: Number, min: 0},
+    imageUrl: { type: String },
   },
   {timestamps: true}
 );

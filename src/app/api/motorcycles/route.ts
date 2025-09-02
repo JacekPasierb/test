@@ -1,33 +1,59 @@
-import { NextResponse } from "next/server";
-import { connectToDatabase } from "@/lib/mongo";
-import MotorcycleModel from "@/models/Motorcycle";
-import { auth } from "@clerk/nextjs/server";
+import {NextResponse} from "next/server";
+import {connectToDatabase} from "@/lib/mongo";
+
+import {auth} from "@clerk/nextjs/server";
+import Motorcycle from "../../../models/Motorcycle";
 
 export const runtime = "nodejs";
 
 // GET /api/motorcycles – lista motocykli użytkownika
 export async function GET() {
-  const { userId } = await auth();
-  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  await connectToDatabase();
+  const {userId} = await auth();
+  if (!userId) return NextResponse.json({error: "Unauthorized"}, {status: 401});
 
   await connectToDatabase();
-  const items = await MotorcycleModel.find({ userId }).sort({ createdAt: -1 }).lean();
+  const items = await Motorcycle.find({userId}).sort({createdAt: -1}).lean();
   return NextResponse.json(items);
 }
 
-// POST /api/motorcycles – dodaj motocykl
-export async function POST(req: Request) {
-  const { userId } = await auth();
-  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+export const POST = async (req: Request) => {
+  try {
+    const {userId} = await auth();
+    if (!userId)
+      return NextResponse.json({error: "Unauthorized"}, {status: 401});
+    console.log("TU", userId);
 
-  const body = await req.json(); // { brand, model, year?, nickname?, odometer?, tankCapacity? }
+    await connectToDatabase();
+    const body = await req.json();
 
-  // prosta walidacja minimalna (chcesz – później dołożymy Yup)
-  if (!body?.brand || !body?.model) {
-    return NextResponse.json({ error: "brand i model są wymagane" }, { status: 400 });
+    // minimalne „utwardzenie” typów z frontu
+    const doc = {
+      marka: String(body.marka || "").trim(),
+      model: String(body.model || "").trim(),
+      rok: Number(body.rok),
+      ksywka: String(body.ksywka || "").trim(),
+      przebieg: Number(body.przebieg),
+      pojemnosc: Number(body.pojemnosc),
+      imageUrl: body.imageUrl ? String(body.imageUrl) : undefined,
+      userId,
+    };
+    // proste sprawdzenia (opcjonalnie możesz użyć Zod/Yup po stronie API)
+    if (!doc.marka || !doc.model || !doc.ksywka)
+      return NextResponse.json({error: "Brak wymaganych pól"}, {status: 400});
+    if (!Number.isFinite(doc.rok) || doc.rok < 1900)
+      return NextResponse.json({error: "Niepoprawny rok"}, {status: 400});
+    if (!Number.isFinite(doc.przebieg) || doc.przebieg < 0)
+      return NextResponse.json({error: "Niepoprawny przebieg"}, {status: 400});
+    if (!Number.isFinite(doc.pojemnosc) || doc.pojemnosc < 0)
+      return NextResponse.json({error: "Niepoprawna pojemność"}, {status: 400});
+
+    const created = await Motorcycle.create(doc);
+    console.log("Fff", created);
+
+    return NextResponse.json({success: true, created}, {status: 201});
+  } catch (error) {
+    console.error("POST /api/motorcycles error:", error);
+    return NextResponse.json({success: false, error}, {status: 500});
   }
-
-  await connectToDatabase();
-  const created = await MotorcycleModel.create({ ...body, userId });
-  return NextResponse.json(created, { status: 201 });
-}
+};
