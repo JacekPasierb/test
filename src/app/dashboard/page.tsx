@@ -26,7 +26,10 @@ export default async function Dashboard() {
   })();
 
   const oilService = {name: "Wymiana oleju", dueKm: 40500}; // przykład
-  const s ={};
+  const s = {
+    due: currentOdo >= oilService.dueKm,
+    kmLeft: Math.max(0, oilService.dueKm - currentOdo)
+  };
   return (
     // <main className="p-8">
     //   <h2 className="text-xl font-semibold">Cześć, {user?.firstName ?? "Motocyklisto"}!</h2>
