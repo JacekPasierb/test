@@ -108,7 +108,8 @@ const MotorcycleForm = () => {
       onSubmit={handleSubmit}
     >
       {({setFieldValue}) => (
-        <Form className="max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+        // <Form className="max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6"></Form>
+        <Form className="max-w-3xl mx-auto  gap-6">
           <div className="space-y-3">
             <h2 className="text-3xl font-bold mb-2">Garaż</h2>
             <p className="text-lg font-bold mb-2">Dodaj motocykl</p>
@@ -141,154 +142,160 @@ const MotorcycleForm = () => {
                 className="text-xs text-red-500"
               />
             </div>
-            <div className="min-h-15 mb-2">
-              <Field
-                name="rok"
-                type="number"
-                placeholder="Rok"
-                className="border border-gray-500 rounded-md p-2 w-full"
-              />
-              <ErrorMessage
-                name="rok"
-                component="div"
-                className="text-xs text-red-500"
-              />
-            </div>
-            <div className="min-h-15 mb-2">
-              <Field
-                name="ksywka"
-                type="text"
-                placeholder="Ksywka"
-                className="border border-gray-500 rounded-md p-2 w-full"
-              />
-              <ErrorMessage
-                name="ksywka"
-                component="div"
-                className="text-xs text-red-500"
-              />
-            </div>
-            <div className="min-h-15 mb-2">
-              <Field
-                name="przebieg"
-                type="number"
-                placeholder="Przebieg"
-                className="border border-gray-500 rounded-md p-2 w-full"
-              />
-              <ErrorMessage
-                name="przebieg"
-                component="div"
-                className="text-xs text-red-500"
-              />
-            </div>
-            <div className="min-h-15 mb-2">
-              <Field
-                name="pojemnosc"
-                type="number"
-                placeholder="Pojemność baku"
-                className="border border-gray-500 rounded-md p-2 w-full"
-              />
-              <ErrorMessage
-                name="pojemnosc"
-                component="div"
-                className="text-xs text-red-500"
-              />
-            </div>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-black text-white rounded-lg w-full"
-              disabled={uploading}
-            >
-              {uploading ? "Czekaj..." : "Zapisz"}
-            </button>
-          </div>
-
-          {/* ====== Zdjęcie ====== */}
-          <div className="flex flex-col justify-center">
-            <label className="block text-sm mb-1 font-medium">
-              Zdjęcie motocykla (max {MAX_SIZE_MB} MB)
-            </label>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={async (e) => {
-                const file = e.currentTarget.files?.[0];
-                setFileError(null);
-                if (!file) return;
-
-                if (!file.type.startsWith("image/")) {
-                  setFileError("Dozwolone są tylko pliki graficzne");
-                  return;
-                }
-                if (file.size > MAX_SIZE_MB * 1024 * 1024) {
-                  setFileError(`Plik jest za duży (max ${MAX_SIZE_MB} MB)`);
-                  return;
-                }
-
-                try {
-                  setUploading(true);
-                  const url = await uploadToCloudinary(file);
-                  setFieldValue("imageUrl", url);
-                  setPreview(url);
-                } catch (err: unknown) {
-                  setFileError(err instanceof Error ? err.message : "Błąd uploadu");
-                } finally {
-                  setUploading(false);
-                }
-              }}
-            />
-
-            {!preview && (
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="w-full h-40 border border-dashed border-gray-500 rounded-md
-                           flex items-center justify-center text-sm hover:bg-gray-50"
-              >
-                {uploading ? "Wgrywanie..." : "Kliknij, aby dodać zdjęcie"}
-              </button>
-            )}
-
-            {preview && (
-              <div
-                className="relative w-full h-40 cursor-pointer group"
-                onClick={() => fileInputRef.current?.click()}
-              >
-                <Image
-                  src={preview}
-                  alt="Podgląd zdjęcia motocykla"
-                  fill
-                  sizes="(max-width: 40px) 100vw, 600px"
-                  className="object-cover rounded-md"
-                />
-                {/* półprzezroczysty overlay z napisem „Zmień” */}
-                <div
-                  className="absolute inset-0 hidden group-hover:flex items-center justify-center
-                                bg-black/40 text-white text-sm rounded-md"
-                >
-                  Kliknij, aby zmienić
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <div className="min-h-15 mb-2">
+                  <Field
+                    name="rok"
+                    type="number"
+                    placeholder="Rok"
+                    className="border border-gray-500 rounded-md p-2 w-full"
+                  />
+                  <ErrorMessage
+                    name="rok"
+                    component="div"
+                    className="text-xs text-red-500"
+                  />
                 </div>
-                {uploading && (
-                  <div
-                    className="absolute inset-0 flex items-center justify-center
-                                  bg-white/60 text-sm rounded-md"
+                <div className="min-h-15 mb-2">
+                  <Field
+                    name="ksywka"
+                    type="text"
+                    placeholder="Ksywka"
+                    className="border border-gray-500 rounded-md p-2 w-full"
+                  />
+                  <ErrorMessage
+                    name="ksywka"
+                    component="div"
+                    className="text-xs text-red-500"
+                  />
+                </div>
+                <div className="min-h-15 mb-2">
+                  <Field
+                    name="przebieg"
+                    type="number"
+                    placeholder="Przebieg"
+                    className="border border-gray-500 rounded-md p-2 w-full"
+                  />
+                  <ErrorMessage
+                    name="przebieg"
+                    component="div"
+                    className="text-xs text-red-500"
+                  />
+                </div>
+                <div className="min-h-15 mb-2">
+                  <Field
+                    name="pojemnosc"
+                    type="number"
+                    placeholder="Pojemność baku"
+                    className="border border-gray-500 rounded-md p-2 w-full"
+                  />
+                  <ErrorMessage
+                    name="pojemnosc"
+                    component="div"
+                    className="text-xs text-red-500"
+                  />
+                </div>
+              </div>
+
+              {/* ====== Zdjęcie ====== */}
+              <div className="flex flex-col justify-center">
+                <label className="block text-sm mb-1 font-medium">
+                  Zdjęcie motocykla (max {MAX_SIZE_MB} MB)
+                </label>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={async (e) => {
+                    const file = e.currentTarget.files?.[0];
+                    setFileError(null);
+                    if (!file) return;
+
+                    if (!file.type.startsWith("image/")) {
+                      setFileError("Dozwolone są tylko pliki graficzne");
+                      return;
+                    }
+                    if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+                      setFileError(`Plik jest za duży (max ${MAX_SIZE_MB} MB)`);
+                      return;
+                    }
+
+                    try {
+                      setUploading(true);
+                      const url = await uploadToCloudinary(file);
+                      setFieldValue("imageUrl", url);
+                      setPreview(url);
+                    } catch (err: unknown) {
+                      setFileError(
+                        err instanceof Error ? err.message : "Błąd uploadu"
+                      );
+                    } finally {
+                      setUploading(false);
+                    }
+                  }}
+                />
+
+                {!preview && (
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="w-full h-40 border border-dashed border-gray-500 rounded-md
+                           flex items-center justify-center text-sm hover:bg-gray-50"
                   >
-                    Wgrywanie...
+                    {uploading ? "Wgrywanie..." : "Kliknij, aby dodać zdjęcie"}
+                  </button>
+                )}
+
+                {preview && (
+                  <div
+                    className="relative w-full h-40 cursor-pointer group"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <Image
+                      src={preview}
+                      alt="Podgląd zdjęcia motocykla"
+                      fill
+                      sizes="(max-width: 40px) 100vw, 600px"
+                      className="object-cover rounded-md"
+                    />
+                    {/* półprzezroczysty overlay z napisem „Zmień” */}
+                    <div
+                      className="absolute inset-0 hidden group-hover:flex items-center justify-center
+                                bg-black/40 text-white text-sm rounded-md"
+                    >
+                      Kliknij, aby zmienić
+                    </div>
+                    {uploading && (
+                      <div
+                        className="absolute inset-0 flex items-center justify-center
+                                  bg-white/60 text-sm rounded-md"
+                      >
+                        Wgrywanie...
+                      </div>
+                    )}
                   </div>
                 )}
+
+                {fileError && (
+                  <div className="text-xs text-red-500 mt-1">{fileError}</div>
+                )}
+
+                <ErrorMessage
+                  name="imageUrl"
+                  component="div"
+                  className="text-xs text-red-500"
+                />
+                <button
+                  type="submit"
+                  className="px-4 py-2 mt-2 bg-black text-white rounded-lg w-full"
+                  disabled={uploading}
+                >
+                  {uploading ? "Czekaj..." : "Zapisz"}
+                </button>
               </div>
-            )}
-
-            {fileError && (
-              <div className="text-xs text-red-500 mt-1">{fileError}</div>
-            )}
-
-            <ErrorMessage
-              name="imageUrl"
-              component="div"
-              className="text-xs text-red-500"
-            />
+            </div>
           </div>
         </Form>
       )}

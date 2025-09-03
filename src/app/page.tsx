@@ -1,5 +1,6 @@
 import {SignOutButton} from "@clerk/nextjs";
 import MotorcycleForm from "./components/MotorcycleForm";
+import MotorcycleList from "./components/MotorcycleList";
 
 const Home = () => {
   return (
@@ -19,6 +20,7 @@ const Home = () => {
         <p className="text-lg mb-2">
           Wybierz motocykl, aby otworzyć jego dashboard.
         </p>
+        <MotorcycleList/>
       </div>
     </main>
   );

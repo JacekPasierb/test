@@ -7,15 +7,34 @@ import Motorcycle from "../../../models/Motorcycle";
 export const runtime = "nodejs";
 
 // GET /api/motorcycles – lista motocykli użytkownika
-export async function GET() {
-  await connectToDatabase();
-  const {userId} = await auth();
-  if (!userId) return NextResponse.json({error: "Unauthorized"}, {status: 401});
 
-  await connectToDatabase();
-  const items = await Motorcycle.find({userId}).sort({createdAt: -1}).lean();
-  return NextResponse.json(items);
+
+export async function GET() {
+  try {
+    await connectToDatabase();
+    const { userId } = await auth();
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    const items = await Motorcycle.find({ userId })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    return NextResponse.json(items);
+  } catch (err) {
+    console.error("GET /api/motorcycles error:", err);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
 }
+
 
 export const POST = async (req: Request) => {
   try {
